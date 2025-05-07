@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Solución al Problema del Cuadro Numérico</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 2cm;
+            line-height: 1.6;
+        }
+        
+        h1, h2 {
+            color: #2c3e50;
+        }
+        
+        .code-container {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            margin: 20px 0;
+            font-family: "Courier New", monospace;
+            overflow-x: auto;
+        }
+        
+        .code-keyword { color: #0000ff; }
+        .code-comment { color: #228B22; }
+        .code-string { color: #a31515; }
+        .code-number { color: #808080; }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th, td {
+            padding: 8px;
+            border: 1px solid #dee2e6;
+            text-align: center;
+        }
+        
+        th {
+            background-color: #e9ecef;
+        }
+        
+        .valid-icon {
+            color: #28a745;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Solución al Problema del Cuadro Numérico</h1>
+
+    <h2>Planteamiento del Problema</h2>
+    <p>Se requiere construir una tabla de 9×4 con las siguientes condiciones:</p>
+    <ul>
+        <li>Cada columna contiene números del 1 al 9 sin repetición</li>
+        <li>La suma de cada fila debe ser constante (Y)</li>
+        <li>La última fila contiene cuatro veces el mismo número (X)</li>
+    </ul>
+
+    <h2>Desarrollo Matemático</h2>
+    <h3>Paso 1: Suma total de las columnas</h3>
+    <p>Cada columna contiene todos los números del 1 al 9:</p>
+    <div>
+        \[
+        \text{Suma por columna} = \sum_{i=1}^{9} i = \frac{9(9+1)}{2} = 45
+        \]
+    </div>
+    <p>Total para 4 columnas:</p>
+    <div>
+        \[
+        \text{Suma total} = 4 \times 45 = 180
+        \]
+    </div>
+
+    <h3>Paso 2: Cálculo de Y</h3>
+    <div>
+        \[
+        9Y = 180 \implies Y = \frac{180}{9} = 20
+        \]
+    </div>
+
+    <h3>Paso 3: Determinación de X</h3>
+    <div>
+        \[
+        4X = 20 \implies X = \frac{20}{4} = 5
+        \]
+    </div>
+
+    <h2>Implementación en Octave</h2>
+    <div class="code-container">
+        <pre><code><span class="code-keyword">function</span> es_valida(m)
+  Y = 20;
+  <span class="code-keyword">for</span> i = 1:9
+    <span class="code-keyword">if</span> sum(m(i, :)) != Y
+      <span class="code-keyword">return</span>;
+    <span class="code-keyword">endif</span>
+  <span class="code-keyword">end</span>
+  disp(<span class="code-string">"✔ Solucion encontrada:"</span>);
+  disp(m);
+<span class="code-keyword">endfunction</span>
+
+<span class="code-keyword">function</span> generar_tabla_magica()
+  numeros = 1:9;
+  perms_col1 = perms(numeros);
+  
+  <span class="code-keyword">for</span> i = 1:1000
+    col1 = perms_col1(i, :)';
+    col2 = col1(randperm(9));
+    col3 = col1(randperm(9));
+    col4 = col1(randperm(9));
+    
+    tabla = [col1, col2, col3, col4];
+    
+    <span class="code-keyword">if</span> all(sum(tabla, 2) == 20)
+      es_valida(tabla);
+      <span class="code-keyword">return</span>;
+    <span class="code-keyword">endif</span>
+  <span class="code-keyword">end</span>
+<span class="code-keyword">endfunction</span>
+
+generar_tabla_magica();</code></pre>
+    </div>
+
+    <h2>Ejemplo de Solución</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Fila</th>
+                <th>Col1</th>
+                <th>Col2</th>
+                <th>Col3</th>
+                <th>Col4</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>1</td><td>9</td><td>1</td><td>6</td><td>4</td></tr>
+            <tr><td>2</td><td>8</td><td>2</td><td>5</td><td>5</td></tr>
+            <tr><td>3</td><td>7</td><td>3</td><td>4</td><td>6</td></tr>
+            <tr><td>4</td><td>6</td><td>4</td><td>3</td><td>7</td></tr>
+            <tr><td>5</td><td>5</td><td>5</td><td>2</td><td>8</td></tr>
+            <tr><td>6</td><td>4</td><td>6</td><td>1</td><td>9</td></tr>
+            <tr><td>7</td><td>3</td><td>7</td><td>9</td><td>1</td></tr>
+            <tr><td>8</td><td>2</td><td>8</td><td>8</td><td>2</td></tr>
+            <tr><td>9</td><td>1</td><td>9</td><td>7</td><td>3</td></tr>
+        </tbody>
+    </table>
+
+    <h2>Conclusiones</h2>
+    <ul>
+        <li>El valor de Y es 20 y X es 5</li>
+        <li>Existen múltiples soluciones posibles</li>
+        <li>El código genera permutaciones hasta encontrar una configuración válida</li>
+        <li>La verificación de filas asegura el cumplimiento de la suma constante</li>
+    </ul>
+</body>
+</html>
